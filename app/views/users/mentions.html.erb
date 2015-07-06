@@ -1,8 +1,7 @@
-<%= render 'shared/header', header: "Mentions" %>
+<%= render 'shared/header', header: "Mentions"%>
 
 <ul>
-  <% current_user.mentions.each do |mention| %>
-    <li>
-      <%= render 'statuses/status', status: mention.status %></li>
-  <% end %>
+<% current_user.mentions.each do |mention| %>
+  <li><%= render 'statuses/status', status: mention.status %></li>
+<% end %>
 </ul>

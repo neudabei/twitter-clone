@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_action :require_user, only: [:follow, :unfollow, :timeline, :mentions]
-  
+
   def index
     @users = User.all
   end
@@ -25,7 +25,6 @@ class UsersController < ApplicationController
     wrong_path unless @user
   end
 
-
   def follow
     user = User.find(params[:id])
     if user
@@ -42,7 +41,7 @@ class UsersController < ApplicationController
     rel = Relationship.where(follower: current_user, leader: user).first
     if user && rel
       rel.destroy
-      flash[:notice] = "You unfollowed #{user.username}."
+      flash[:notice] = "You are no longer following #{user.username}."
       redirect_to user_path(user.username)
     else
       wrong_path
@@ -61,7 +60,9 @@ class UsersController < ApplicationController
     current_user.mark_unread_mentions!
   end
 
+  private
+
   def user_params
-    params.require(:user).permit(:username, :email, :password)
+    params.require(:user).permit!
   end
 end
