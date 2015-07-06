@@ -11,7 +11,7 @@ class SessionsController < ApplicationController
       session[:user_id] = user.id
 
       flash[:notice] = "Welcome, you're logged in!"
-      redirect_to user_path(user.username)
+      redirect_to timeline_path
 
     else
       flash.now[:error] = "There is something wrong with your username or password."

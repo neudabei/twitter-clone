@@ -1,5 +1,5 @@
 class StatusesController < ApplicationController
-  before_action :require_user
+  before_action :require_user, only: [:new, :create, :retweet]
 
   def new
     @status = Status.new
@@ -7,15 +7,31 @@ class StatusesController < ApplicationController
 
   def create
     @status = Status.new(status_params)
-    user = User.find 2
-    @status.creator = user # TODO: hardcoded until authentication is done
-    
+    @status.creator = current_user 
+
     if @status.save
+      
       flash[:notice] = "Status created!"
-      redirect_to user_path(user.username)
+      redirect_to user_path(@status.creator.username)
     else
       render :new
     end
+  end
+
+  def show
+    @status = Status.find(params[:id])
+  end
+
+  def retweet
+    status = Status.find(params[:id])
+    new_status = Status.new(body: status.body, creator: current_user, parent_status: status)
+    if new_status.save
+      flash[:notice] = "Retweeted!"
+    else
+      flash[:error] = "Couldn't retweet!"
+      redirect_to :back
+    end
+    redirect_to :back
   end
 
   private
